@@ -1,11 +1,5 @@
-import jssc.SerialPort;
 import jssc.SerialPortList;
-import jssc.SerialPortEvent;
-import jssc.SerialPortEventListener;
-import jssc.SerialPortException;
 
-import java.io.Closeable;
-import java.io.IOException;
 import java.util.Scanner;
 
 /**
