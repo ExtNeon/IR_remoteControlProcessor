@@ -3,5 +3,5 @@
  */
 public interface ButtonPressedEventListener {
 
-    void ButtonPressed(String buttonCode);
+    void buttonPressed(String buttonCode, IR_moduleConnection ir_module);
 }
