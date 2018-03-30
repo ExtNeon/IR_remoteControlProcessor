@@ -16,6 +16,7 @@ class IR_moduleConnection implements SerialPortEventListener, Closeable {
     private String clickResult = "";
     private SerialPort serialPort;
     private ArrayList<ButtonPressedEventListener> buttonPressedEventListeners;
+    private volatile long disableReceivingEndTime = 0;
 
     IR_moduleConnection(String portName, ArrayList<ButtonPressedEventListener> buttonPressedEventListeners) {
         serialPort = new SerialPort(portName);
@@ -46,25 +47,35 @@ class IR_moduleConnection implements SerialPortEventListener, Closeable {
         if (event.isRXCHAR() && event.getEventValue() > 1) {
             try {
                 String receivedStr = convertByteArrayToANSIStr(serialPort.readBytes(event.getEventValue()));
-                switch (receivedStr) {
-                    case "DEVICE_ACTIVE":
-                        serialPort.writeString("CONNECTED\n");
-                        isConnected = true;
-                        break;
-                    default:
-                        if (waitForClickMode) {
-                            clickResult = receivedStr;
-                            waitForClickMode = false;
-                            beep();
-                        } else {
-                            for (ButtonPressedEventListener selectedListener : buttonPressedEventListeners) {
-                                selectedListener.buttonPressed(receivedStr, this);
+                if (System.currentTimeMillis() > disableReceivingEndTime) {
+                    switch (receivedStr) {
+                        case "DEVICE_ACTIVE":
+                            serialPort.writeString("CONNECTED\n");
+                            isConnected = true;
+                            break;
+                        default:
+                            if (waitForClickMode) {
+                                clickResult = receivedStr;
+                                waitForClickMode = false;
+                                beep();
+                            } else {
+                                for (ButtonPressedEventListener selectedListener : buttonPressedEventListeners) {
+                                    selectedListener.buttonPressed(receivedStr, this);
+                                }
                             }
-                        }
+                    }
                 }
             } catch (SerialPortException ignored) {
             }
         }
+    }
+
+    public void pauseReceivingFor(long millis) {
+        disableReceivingEndTime = System.currentTimeMillis() + millis;
+    }
+
+    public void resumeReceiving() {
+        disableReceivingEndTime = 0;
     }
 
     void attachButtonEventListener(ButtonPressedEventListener listener) {
@@ -88,14 +99,6 @@ class IR_moduleConnection implements SerialPortEventListener, Closeable {
     void turnToWaitToClickMode() {
         this.waitForClickMode = true;
     }
-
-    /*public ArrayList<ButtonPressedEventListener> getButtonPressedEventListeners() {
-        return buttonPressedEventListeners;
-    }
-
-    public void setButtonPressedEventListeners(ArrayList<ButtonPressedEventListener> buttonPressedEventListeners) {
-        this.buttonPressedEventListeners = buttonPressedEventListeners;
-    }*/
 
     String getClickResult() {
         return clickResult;

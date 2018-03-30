@@ -1,6 +1,9 @@
 import jssc.SerialPortList;
 import utils.ConsoleUtils;
+import utils.iniSettings.INISettings;
+import utils.iniSettings.INISettingsSection;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.CancellationException;
 
@@ -9,22 +12,34 @@ import java.util.concurrent.CancellationException;
  */
 public class Main implements ButtonPressedEventListener {
 
+    final private static String KEY_ACTIONS_SETTINGS_FILE = "actions.ini";
+    final private static String MAIN_SETTINGS_FILE = "settings.ini";
     final private static long MAX_CONNECTION_WAIT_TIMEOUT = 3000;
     final private static String HELP_STR = "help - показать эту справку\n" +
             "enter - привязать определённую клавишу к действию\n" +
             "reconnect - закрыть текущее подключение, и заново запустить поиск устройств\n" +
             "toggle speaker - включить/выключить звуковой сигнал при нажатии кнопки\n" +
             "exit - выйти из приложения";
-    private ArrayList<KeyPressedAction> keyPressedActions;
-    private boolean enableSignal = true;
+    private ArrayList<KeyPressedAction> keyPressedActions = new ArrayList<>();
+    private boolean enableSignal = false;
+    private String lastKeyPressed = "";
 
     private Main() throws InterruptedException {
+        INISettings settings = new INISettings();
+        try {
+            settings.loadFromFile(KEY_ACTIONS_SETTINGS_FILE);
+            for (INISettingsSection currentSection : settings.getSections()) {
+                keyPressedActions.add(new KeyPressedAction(currentSection));
+            }
+        } catch (InvalidSettingsRecordException e) {
+            System.err.println("Ошибка интерпретации файла настроек");
+        } catch (IOException ignored) {
+            System.err.println("Ошибка чтения файла настроек");
+        }
         System.out.println("Список доступных портов:");
         printAvailablePorts();
-        IR_moduleConnection ir_module;
-        ir_module = findAndConnectToTheModule();
+        IR_moduleConnection ir_module = findAndConnectToTheModule();
         ir_module.attachButtonEventListener(this);
-        keyPressedActions = new ArrayList<>();
         System.out.println("Доступные команды:\n" + HELP_STR);
         while (ir_module != null) {
             switch (ConsoleUtils.getEnteredString("\r_> ")) {
@@ -33,10 +48,13 @@ public class Main implements ButtonPressedEventListener {
                     try {
                         addButtonPressedActionIntoList(new KeyPressedAction(buttonGettedCode, ConsoleUtils.getEnteredString("Выберите действие при нажатии на данную кнопку: \n" + KeyPressedAction.HELP_ACTION_TYPES + "\n_>")), keyPressedActions);
                         System.out.println("Действие успешно привязано к данной кнопке.");
+                        settings.updateSection(keyPressedActions.get(keyPressedActions.size() - 1).getSettingsSection());
+                        settings.saveToFile(KEY_ACTIONS_SETTINGS_FILE);
                     } catch (CancellationException ignored) {
                         System.out.println("Установка действия была отменена");
+                    } catch (IOException e) {
+                        System.err.println("Ошибка сохранения файла настроек");
                     }
-
                     break;
                 case "exit":
                     ir_module.close();
@@ -112,7 +130,7 @@ public class Main implements ButtonPressedEventListener {
             buttonGettedCode = getPressedKey(ir_module);
             System.out.println("Код клавиши получен: " + buttonGettedCode + "\n" +
                     "Повторите нажатие для подтверждения действия...");
-            Thread.sleep(500); //Ждём, чтобы не получить этот же сигнад
+            ir_module.pauseReceivingFor(300);
             isValid = getPressedKey(ir_module).equals(buttonGettedCode);
             if (!isValid) {
                 System.out.println("Ошибка! Полученный код клавиши отличается от первоначального. Повторите попытку.");
@@ -155,10 +173,14 @@ public class Main implements ButtonPressedEventListener {
     public void buttonPressed(String buttonCode, IR_moduleConnection ir_module) {
         for (KeyPressedAction selectedAction : keyPressedActions) {
             if (selectedAction.getKeyCode().equals(buttonCode)) {
-                if (enableSignal) {
-                    ir_module.beep();
+                if (!(lastKeyPressed.equals(buttonCode) && (System.currentTimeMillis() - selectedAction.getLastPressedTime()) < selectedAction.getMinimalIntervalBetweenNextPress())) {
+                    if (enableSignal) {
+                        ir_module.beep();
+                    }
+                    lastKeyPressed = buttonCode;
+                    selectedAction.runAction();
                 }
-                selectedAction.runAction();
+                break;
             }
         }
     }

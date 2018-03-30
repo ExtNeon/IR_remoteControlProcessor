@@ -1,5 +1,6 @@
 package utils;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
@@ -14,7 +15,13 @@ public class ConsoleUtils {
 
     public static int getEnteredIntegerNumber(String message) {
         System.out.print(message);
-        return new Scanner(System.in).nextInt();
+        for (; ; ) {
+            try {
+                return new Scanner(System.in).nextInt();
+            } catch (InputMismatchException e) {
+                System.err.println("Ошибка ввода, повторите попытку...");
+            }
+        }
     }
 
     /**
