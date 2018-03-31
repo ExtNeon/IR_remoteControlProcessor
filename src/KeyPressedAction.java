@@ -26,7 +26,7 @@ class KeyPressedAction {
     private long minimalIntervalBetweenNextPress = 0;
     private long lastPressedTime = System.currentTimeMillis();
 
-    KeyPressedAction(String keyCode, String actionId) {
+    KeyPressedAction(String keyCode, String actionId) throws CancellationException {
         if (actionId.length() == 0) {
             throw new CancellationException();
         }
@@ -129,7 +129,7 @@ class KeyPressedAction {
         return builder.toString();
     }
 
-    void runAction() {
+    void runAction() throws CancellationException {
         if (params.size() == 0) {
             throw new CancellationException();
         }

@@ -1,5 +1,5 @@
 /**
- * Created by Кирилл on 27.03.2018.
+ * Исключение, выбрасывающееся в единственном случае - когда файл конфигураций не может быть считан корректно.
  */
 public class InvalidSettingsRecordException extends Exception {
 }
