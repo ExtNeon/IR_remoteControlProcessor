@@ -14,7 +14,6 @@ class MonofonicComposition {
     }
 
     MonofonicComposition(int frequency, int duration) {
-        // ArrayList<MonofonicNote> noteList = new ArrayList<>(1);
         compositionSheet.add(new MonofonicNote(frequency, duration));
     }
 
@@ -43,7 +42,6 @@ class MonofonicComposition {
      */
     @Override
     public String toString() {
-        // PM:(rep,mxdur)@3#784,100%659,100%523,100%!
         StringBuilder result = new StringBuilder("(");
         result.append(repeatationCount);
         result.append(',');
