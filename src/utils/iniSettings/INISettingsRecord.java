@@ -13,7 +13,7 @@ public class INISettingsRecord {
         this.value = value;
     }
 
-    public String getKey() {
+    String getKey() {
         return key;
     }
 

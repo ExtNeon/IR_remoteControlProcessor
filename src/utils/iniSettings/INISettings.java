@@ -55,7 +55,7 @@ public class INISettings {
      * @return Секция с заданным именем.
      * @throws NotFoundException В случае, если секции с подобным именем нет в списке.
      */
-    public INISettingsSection getSectionByName(String sectionName) throws NotFoundException {
+    private INISettingsSection getSectionByName(String sectionName) throws NotFoundException {
         for (INISettingsSection selectedSection : sections) {
             if (selectedSection.getSectionName().equals(sectionName)) {
                 return selectedSection;
@@ -101,7 +101,7 @@ public class INISettings {
      * @param text Текст, из которого требуется импортировать секции
      */
     // TODO: 27.03.2018 Сделай его менее ужасным
-    public void importFromText(String text) {
+    private void importFromText(String text) {
         ArrayList<String> lines = splitTextIntoLines(text);
         sections = new ArrayList<>();
         while (lines.size() > 0) {
