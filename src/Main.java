@@ -12,8 +12,8 @@ import java.util.concurrent.CancellationException;
  */
 public class Main implements ButtonPressedEventListener {
 
+
     final private static String KEY_ACTIONS_SETTINGS_FILE = "actions.ini";
-    final private static String MAIN_SETTINGS_FILE = "settings.ini";
     final private static long MAX_CONNECTION_WAIT_TIMEOUT = 3000;
     final private static String HELP_STR = "help - показать эту справку\n" +
             "enter - привязать определённую клавишу к действию\n" +
@@ -36,7 +36,6 @@ public class Main implements ButtonPressedEventListener {
         } catch (IOException ignored) {
             System.err.println("Ошибка чтения файла настроек");
         }
-        System.out.println("Список доступных портов:");
         printAvailablePorts();
         IR_moduleConnection ir_module = findAndConnectToTheModule();
         ir_module.attachButtonEventListener(this);
@@ -47,11 +46,23 @@ public class Main implements ButtonPressedEventListener {
         new Main();
     }
 
+    /**
+     * Добавляет объект @code{KeyPressedAction} в список действий @code{actionsList},
+     * причём так, чтобы действие на одну и ту же клавишу не повторялось.
+     *
+     * @param action      Действие, которое необходимо добавить в список
+     * @param actionsList Список действий.
+     */
     private static void addButtonPressedActionIntoList(KeyPressedAction action, ArrayList<KeyPressedAction> actionsList) {
         removePressedActionFromList(action, actionsList);
         actionsList.add(action);
     }
 
+    /**
+     * Удаляет действие с таким же кодом клавиши, что и у @code{action} из списка @code{actionsList}.
+     * @param action Действие, код клавиши которого будет использован для поиска
+     * @param actionsList Список действий, в котором будет произведён поиск.
+     */
     private static void removePressedActionFromList(KeyPressedAction action, ArrayList<KeyPressedAction> actionsList) {
         for (KeyPressedAction selectedAction : actionsList) {
             if (action.getKeyCode().equals(selectedAction.getKeyCode())) {
@@ -97,13 +108,14 @@ public class Main implements ButtonPressedEventListener {
      * возвращает код нажатой клавиши.
      * В случае, если пользователь ошибся, данные будут запрошены снова.
      * @param ir_module Модуль инфракрасного приёмника, с которого требуется считать код нажатой клавиши
-     * @returnКод нажатой клавиши в шестнадцатиричной форме
+     * @return Код нажатой клавиши в шестнадцатиричной форме
      * @throws InterruptedException В случае, если обработчик модуля был закрыт во время ожидания нажатия.
      */
     private static String askForChoseKey(IR_moduleConnection ir_module) throws InterruptedException {
         boolean isValid;
         String buttonGettedCode;
         do {
+            ir_module.playSignal(ir_module.melody_doubleSignal);
             System.out.println("Нажмите клавишу на пульте дистанционного управления...");
             buttonGettedCode = getPressedKey(ir_module);
             System.out.println("Код клавиши получен: " + buttonGettedCode + "\n" +
@@ -111,9 +123,11 @@ public class Main implements ButtonPressedEventListener {
             ir_module.pauseReceivingFor(300);
             isValid = getPressedKey(ir_module).equals(buttonGettedCode);
             if (!isValid) {
-                System.out.println("Ошибка! Полученный код клавиши отличается от первоначального. Повторите попытку.");
+                System.out.println("Ошибка! Полученный код клавиши отличается от первоначального. Повторите попытку.\n\n");
             }
+            delayMs(300);
         } while (!isValid);
+        ir_module.playSignal(ir_module.melody_confirmationSignal);
         System.out.println("Клавиша подтверждена");
         return buttonGettedCode;
     }
@@ -154,6 +168,7 @@ public class Main implements ButtonPressedEventListener {
      * Выводит список всех доступных COM - портов в консоль.
      */
     private static void printAvailablePorts() {
+        System.out.println("Список доступных портов:");
         String[] portNames = SerialPortList.getPortNames();
         if (portNames.length > 0) {
             for (String currentPortName : portNames) {
@@ -177,6 +192,12 @@ public class Main implements ButtonPressedEventListener {
         }
     }
 
+    /**
+     * Выводит меню пользователя в консоль, и ждёт ввода определённой команды в практически бесконечном цикле.
+     * @param ir_module Модуль инфракрасного приёмника, который будет использоваться для
+     * @param settings
+     * @throws InterruptedException
+     */
     private void runMenu(IR_moduleConnection ir_module, INISettings settings) throws InterruptedException {
         System.out.println("Доступные команды:\n" + HELP_STR);
         while (ir_module != null) {
@@ -228,7 +249,7 @@ public class Main implements ButtonPressedEventListener {
             if (selectedAction.getKeyCode().equals(buttonCode)) {
                 if (!(lastKeyPressed.equals(buttonCode) && (System.currentTimeMillis() - selectedAction.getLastPressedTime()) < selectedAction.getMinimalIntervalBetweenNextPress())) {
                     if (enableSignal) {
-                        ir_module.beep();
+                        ir_module.playSignal(ir_module.melody_standartSignal);
                     }
                     lastKeyPressed = buttonCode;
                     selectedAction.runAction();
