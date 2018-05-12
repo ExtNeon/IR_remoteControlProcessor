@@ -21,6 +21,13 @@ import java.util.ArrayList;
  */
 class IR_moduleConnection implements SerialPortEventListener, Closeable {
 
+    /*
+    ********Стандартные мелодии********
+     */
+    public MonofonicComposition melody_connected;
+    public MonofonicComposition melody_standartSignal;
+    public MonofonicComposition melody_doubleSignal;
+    public MonofonicComposition melody_confirmationSignal;
     private boolean isConnected = false;
     private boolean waitForClickMode = false;
     private String clickResult = "";
@@ -34,7 +41,8 @@ class IR_moduleConnection implements SerialPortEventListener, Closeable {
      * @param portName                    Название COM - порта, через который будет осуществлено подключение
      * @param buttonPressedEventListeners Список объектов, реализующих интерфейс с обработчиками нажатий на кнопки.
      */
-    IR_moduleConnection(String portName, ArrayList<ButtonPressedEventListener> buttonPressedEventListeners) {
+    private IR_moduleConnection(String portName, ArrayList<ButtonPressedEventListener> buttonPressedEventListeners) {
+        fillStantartMelodies();
         serialPort = new SerialPort(portName);
         this.buttonPressedEventListeners = buttonPressedEventListeners;
         try {
@@ -80,14 +88,14 @@ class IR_moduleConnection implements SerialPortEventListener, Closeable {
                 if (System.currentTimeMillis() > disableReceivingEndTime) {
                     switch (receivedStr) {
                         case "DEVICE_ACTIVE":
-                            serialPort.writeString("CONNECTED\n");
+                            playSignal(melody_connected);
                             isConnected = true;
                             break;
                         default:
                             if (waitForClickMode) {
                                 clickResult = receivedStr;
                                 waitForClickMode = false;
-                                beep();
+                                playSignal(melody_standartSignal);
                             } else {
                                 for (ButtonPressedEventListener selectedListener : buttonPressedEventListeners) {
                                     selectedListener.buttonPressed(receivedStr, this);
@@ -104,7 +112,7 @@ class IR_moduleConnection implements SerialPortEventListener, Closeable {
      * Временно приостанавливает обработку нажатий на @code{millis} миллисекунд
      * @param millis Время, на которое будет приостановлена обработка данных с модуля.
      */
-    public void pauseReceivingFor(long millis) {
+    void pauseReceivingFor(long millis) {
         disableReceivingEndTime = System.currentTimeMillis() + millis;
     }
 
@@ -130,7 +138,7 @@ class IR_moduleConnection implements SerialPortEventListener, Closeable {
      * связанных с нажатием на кнопки, из списка.
      * @param listener объект, реализующий интерфейс @code{ButtonPressedEventListener}
      */
-    void detachButtonEventListener(ButtonPressedEventListener listener) {
+    private void detachButtonEventListener(ButtonPressedEventListener listener) {
         for (ButtonPressedEventListener selectedListener : buttonPressedEventListeners) {
             if (selectedListener == listener) {
                 buttonPressedEventListeners.remove(selectedListener);
@@ -175,12 +183,34 @@ class IR_moduleConnection implements SerialPortEventListener, Closeable {
     }
 
     /**
-     * Посылает на модуль команду, воспроизводящую короткий высокочастотный звук. Используется для уведомительных целей.
+     * Посылает на модуль мелодию для воспроизведения на PC SPEAKER. Используется для уведомительных целей.
      */
-    void beep() {
+    void playSignal(MonofonicComposition composition) {
         try {
-            serialPort.writeString("BEEP\n");
+            serialPort.writeString("PLAY:" + composition + "\n");
         } catch (SerialPortException ignored) {}
+    }
+
+    /**
+     * Заполняет стандартные контейнеры мелодий для их последующего воспроизведения через PC SPEAKER устройства.
+     */
+    void fillStantartMelodies() {
+        melody_connected = new MonofonicComposition();
+        melody_standartSignal = new MonofonicComposition(1700, 40);
+        melody_doubleSignal = new MonofonicComposition();
+        melody_confirmationSignal = new MonofonicComposition();
+
+        melody_connected.getCompositionSheet().add(new MonofonicNote(659, 82));
+        melody_connected.getCompositionSheet().add(new MonofonicNote(784, 82));
+        melody_connected.getCompositionSheet().add(new MonofonicNote(1046, 82));
+        melody_connected.getCompositionSheet().add(new MonofonicNote(1318, 82));
+
+        melody_doubleSignal.getCompositionSheet().add(new MonofonicNote(1200, 100));
+        melody_doubleSignal.getCompositionSheet().add(new MonofonicNote(0, 60));
+        melody_doubleSignal.setRepeatationCount(2);
+
+        melody_confirmationSignal.getCompositionSheet().add(new MonofonicNote(784, 82));
+        melody_confirmationSignal.getCompositionSheet().add(new MonofonicNote(987, 82));
     }
 
     @Override
