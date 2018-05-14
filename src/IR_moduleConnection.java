@@ -24,10 +24,10 @@ class IR_moduleConnection implements SerialPortEventListener, Closeable {
     /*
     ********Стандартные мелодии********
      */
-    public MonofonicComposition melody_connected;
-    public MonofonicComposition melody_standartSignal;
-    public MonofonicComposition melody_doubleSignal;
-    public MonofonicComposition melody_confirmationSignal;
+    public MonophonicComposition melody_connected;
+    public MonophonicComposition melody_standartSignal;
+    public MonophonicComposition melody_doubleSignal;
+    public MonophonicComposition melody_confirmationSignal;
     private boolean isConnected = false;
     private boolean waitForClickMode = false;
     private String clickResult = "";
@@ -185,7 +185,7 @@ class IR_moduleConnection implements SerialPortEventListener, Closeable {
     /**
      * Посылает на модуль мелодию для воспроизведения на PC SPEAKER. Используется для уведомительных целей.
      */
-    void playSignal(MonofonicComposition composition) {
+    void playSignal(MonophonicComposition composition) {
         try {
             serialPort.writeString("PLAY:" + composition + "\n");
         } catch (SerialPortException ignored) {}
@@ -195,22 +195,22 @@ class IR_moduleConnection implements SerialPortEventListener, Closeable {
      * Заполняет стандартные контейнеры мелодий для их последующего воспроизведения через PC SPEAKER устройства.
      */
     void fillStantartMelodies() {
-        melody_connected = new MonofonicComposition();
-        melody_standartSignal = new MonofonicComposition(1700, 40);
-        melody_doubleSignal = new MonofonicComposition();
-        melody_confirmationSignal = new MonofonicComposition();
+        melody_connected = new MonophonicComposition();
+        melody_standartSignal = new MonophonicComposition(1700, 40);
+        melody_doubleSignal = new MonophonicComposition();
+        melody_confirmationSignal = new MonophonicComposition();
 
-        melody_connected.getCompositionSheet().add(new MonofonicNote(659, 82));
-        melody_connected.getCompositionSheet().add(new MonofonicNote(784, 82));
-        melody_connected.getCompositionSheet().add(new MonofonicNote(1046, 82));
-        melody_connected.getCompositionSheet().add(new MonofonicNote(1318, 82));
+        melody_connected.getCompositionSheet().add(new MonophonicNote(659, 82));
+        melody_connected.getCompositionSheet().add(new MonophonicNote(784, 82));
+        melody_connected.getCompositionSheet().add(new MonophonicNote(1046, 82));
+        melody_connected.getCompositionSheet().add(new MonophonicNote(1318, 82));
 
-        melody_doubleSignal.getCompositionSheet().add(new MonofonicNote(1200, 100));
-        melody_doubleSignal.getCompositionSheet().add(new MonofonicNote(0, 60));
+        melody_doubleSignal.getCompositionSheet().add(new MonophonicNote(1200, 100));
+        melody_doubleSignal.getCompositionSheet().add(new MonophonicNote(0, 60));
         melody_doubleSignal.setRepeatationCount(2);
 
-        melody_confirmationSignal.getCompositionSheet().add(new MonofonicNote(784, 82));
-        melody_confirmationSignal.getCompositionSheet().add(new MonofonicNote(987, 82));
+        melody_confirmationSignal.getCompositionSheet().add(new MonophonicNote(784, 82));
+        melody_confirmationSignal.getCompositionSheet().add(new MonophonicNote(987, 82));
     }
 
     @Override

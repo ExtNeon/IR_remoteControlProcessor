@@ -5,22 +5,22 @@ import java.util.ArrayList;
  *
  * @author Малякин Кирилл. 15ИТ20
  */
-class MonofonicComposition {
-    private ArrayList<MonofonicNote> compositionSheet = new ArrayList<>();
+class MonophonicComposition {
+    private ArrayList<MonophonicNote> compositionSheet = new ArrayList<>();
     private int repeatationCount = 1;
     private int maxPlayDuration = 0;
 
-    MonofonicComposition() {
+    MonophonicComposition() {
     }
 
-    MonofonicComposition(int frequency, int duration) {
-        compositionSheet.add(new MonofonicNote(frequency, duration));
+    MonophonicComposition(int frequency, int duration) {
+        compositionSheet.add(new MonophonicNote(frequency, duration));
     }
 
     /**
      * @return Массив объектов Monofonic Note в виде ArrayList.
      */
-    ArrayList<MonofonicNote> getCompositionSheet() {
+    ArrayList<MonophonicNote> getCompositionSheet() {
         return compositionSheet;
     }
 
@@ -49,7 +49,7 @@ class MonofonicComposition {
         result.append(")@");
         result.append(compositionSheet.size());
         result.append('#');
-        for (MonofonicNote currentNote : compositionSheet) {
+        for (MonophonicNote currentNote : compositionSheet) {
             result.append(currentNote.frequency);
             result.append(',');
             result.append(currentNote.duration);
