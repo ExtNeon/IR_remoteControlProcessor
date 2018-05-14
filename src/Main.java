@@ -195,8 +195,8 @@ public class Main implements ButtonPressedEventListener {
     /**
      * Выводит меню пользователя в консоль, и ждёт ввода определённой команды в практически бесконечном цикле.
      * @param ir_module Модуль инфракрасного приёмника, который будет использоваться для
-     * @param settings
-     * @throws InterruptedException
+     * @param settings INI - файл, в который будут добавлены новые действия.
+     * @throws InterruptedException В случае, если обработчик модуля был закрыт во время ожидания нажатия.
      */
     private void runMenu(IR_moduleConnection ir_module, INISettings settings) throws InterruptedException {
         System.out.println("Доступные команды:\n" + HELP_STR);
