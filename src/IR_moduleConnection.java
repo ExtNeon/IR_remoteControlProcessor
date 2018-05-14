@@ -24,10 +24,10 @@ class IR_moduleConnection implements SerialPortEventListener, Closeable {
     /*
     ********Стандартные мелодии********
      */
-    public MonophonicComposition melody_connected;
-    public MonophonicComposition melody_standartSignal;
-    public MonophonicComposition melody_doubleSignal;
-    public MonophonicComposition melody_confirmationSignal;
+    MonophonicComposition melody_connected;
+    MonophonicComposition melody_standartSignal;
+    MonophonicComposition melody_doubleSignal;
+    MonophonicComposition melody_confirmationSignal;
     private boolean isConnected = false;
     private boolean waitForClickMode = false;
     private String clickResult = "";
@@ -194,7 +194,7 @@ class IR_moduleConnection implements SerialPortEventListener, Closeable {
     /**
      * Заполняет стандартные контейнеры мелодий для их последующего воспроизведения через PC SPEAKER устройства.
      */
-    void fillStantartMelodies() {
+    private void fillStantartMelodies() {
         melody_connected = new MonophonicComposition();
         melody_standartSignal = new MonophonicComposition(1700, 40);
         melody_doubleSignal = new MonophonicComposition();
