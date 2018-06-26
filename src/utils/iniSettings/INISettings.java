@@ -1,6 +1,7 @@
 package utils.iniSettings;
 
 import utils.iniSettings.exceptions.AlreadyExistsException;
+import utils.iniSettings.exceptions.IniSettingsException;
 import utils.iniSettings.exceptions.NotFoundException;
 
 import java.io.*;
@@ -89,7 +90,7 @@ public class INISettings {
      * @param fileName Файл, из которого требуется импортировать секции
      * @throws IOException В случае проблем с записью или ошибок ввода - вывода.
      */
-    public void loadFromFile(String fileName) throws IOException {
+    public void loadFromFile(String fileName) throws IOException, IniSettingsException {
         try (BufferedReader textFile = new BufferedReader(new FileReader(fileName))) {
             String readedText = textFile.lines().collect(Collectors.joining("\n"));
             importFromText(readedText);
@@ -100,8 +101,7 @@ public class INISettings {
      * Метод импортирует список секций из текста, оформленного согласно формату INI. Импортированный список замещает тот, что был до него.
      * @param text Текст, из которого требуется импортировать секции
      */
-    // TODO: 27.03.2018 Сделай его менее ужасным
-    private void importFromText(String text) {
+    private void importFromText(String text) throws IniSettingsException {
         ArrayList<String> lines = splitTextIntoLines(text);
         sections = new ArrayList<>();
         while (lines.size() > 0) {
@@ -121,12 +121,8 @@ public class INISettings {
             }
             sections.add(new INISettingsSection(lines.get(startIndex).substring(1, lines.get(startIndex).length() - 1).trim()));
             for (int i = startIndex + 1; i < lastIndex; i++) {
-                try {
-                    if (lines.get(i).contains("=")) {
-                        sections.get(sections.size() - 1).addField(new INISettingsRecord(lines.get(i).split("=")[0].trim(), lines.get(i).split("=")[1].trim()));
-                    }
-                } catch (AlreadyExistsException e) {
-                    e.printStackTrace();
+                if (lines.get(i).contains("=")) {
+                    sections.get(sections.size() - 1).addField(new INISettingsRecord(lines.get(i)));
                 }
             }
             for (int i = startIndex; i < lastIndex; i++) {

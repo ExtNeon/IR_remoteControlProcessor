@@ -1,7 +1,7 @@
 package utils.iniSettings;
 
-import utils.iniSettings.exceptions.AlreadyExistsException;
-import utils.iniSettings.exceptions.NotFoundException;
+import iniSettings.exceptions.AlreadyExistsException;
+import iniSettings.exceptions.NotFoundException;
 
 import java.util.ArrayList;
 
