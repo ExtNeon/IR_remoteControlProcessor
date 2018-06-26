@@ -1,8 +1,7 @@
 import utils.ConsoleUtils;
 import utils.iniSettings.INISettingsRecord;
 import utils.iniSettings.INISettingsSection;
-import utils.iniSettings.exceptions.AlreadyExistsException;
-import utils.iniSettings.exceptions.NotFoundException;
+import utils.iniSettings.exceptions.IniSettingsException;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -20,10 +19,11 @@ class KeyPressedAction {
             "3 - сдвинуть курсор в определённую сторону\n" +
             "4 - эмулировать вращение колеса прокрутки мыши\n" +
             "5 - эмулировать нажатие комбинации клавиш\n" +
-            "enter - отменить действие";
+            "6 - сбросить привязку к действию\n" +
+            "enter - вернуться в меню";
+    private final ArrayList<Integer> params = new ArrayList<>();
     private String keyCode;
     private int actionId;
-    private ArrayList<Integer> params = new ArrayList<>();
     private long minimalIntervalBetweenNextPress = 0;
     private long lastPressedTime = System.currentTimeMillis();
 
@@ -60,6 +60,9 @@ class KeyPressedAction {
             case 5:
                 set_keyComboPress();
                 break;
+            case 6:
+                params.add(0);
+                break;
             default:
                 throw new CancellationException();
         }
@@ -70,18 +73,14 @@ class KeyPressedAction {
      * Обратный данному метод, позволяющий сгенерировать секцию - @code{getSettingsSection()}
      *
      * @param settingsSection Секция, из которой будут импортированы параметры.
-     * @throws InvalidSettingsRecordException В случае, если секция не содержит определённых записей, необходимых для успешного импорта.
+     * @throws IniSettingsException В случае, если секция не содержит определённых записей, необходимых для успешного импорта.
      */
-    KeyPressedAction(INISettingsSection settingsSection) throws InvalidSettingsRecordException {
+    KeyPressedAction(INISettingsSection settingsSection) throws IniSettingsException {
         this.keyCode = settingsSection.getSectionName();
-        try {
-            this.actionId = Integer.valueOf(settingsSection.getFieldByKey("actionId").getValue());
-            this.minimalIntervalBetweenNextPress = Integer.valueOf(settingsSection.getFieldByKey("minPressInterval").getValue());
-            for (int i = 0; i < Integer.valueOf(settingsSection.getFieldByKey("paramsCount").getValue()); i++) {
-                params.add(Integer.valueOf(settingsSection.getFieldByKey("param_" + i).getValue()));
-            }
-        } catch (NotFoundException e) {
-            throw new InvalidSettingsRecordException();
+        this.actionId = Integer.valueOf(settingsSection.getFieldByKey("actionId").getValue());
+        this.minimalIntervalBetweenNextPress = Integer.valueOf(settingsSection.getFieldByKey("minPressInterval").getValue());
+        for (int i = 0; i < Integer.valueOf(settingsSection.getFieldByKey("paramsCount").getValue()); i++) {
+            params.add(Integer.valueOf(settingsSection.getFieldByKey("param_" + i).getValue()));
         }
     }
 
@@ -275,7 +274,7 @@ class KeyPressedAction {
     /**
      * Перемещает курсор мыши на определённое количество пикселей по вертикали и по горизонтали, исходя из параметров к действию.
      *
-     * @param robot Экземпляр класса Robot, с помощью которого будет осуществляться дуйствие в системе.
+     * @param robot Экземпляр класса Robot, с помощью которого будет осуществляться действие в системе.
      * @throws CancellationException В случае, если параметры к действию некорректны.
      */
     private void runAction_mouseMove(Robot robot) throws CancellationException {
@@ -318,13 +317,13 @@ class KeyPressedAction {
         return minimalIntervalBetweenNextPress;
     }
 
-    /**
+    /*
      * Метод позволяет установить минимальный интервал между повторными нажатиями данной клавиши в миллисекундах.
      * @param minimalIntervalBetweenNextPress Необходимый минимальный интервал в миллисекундах.
      */
-    public void setMinimalIntervalBetweenNextPress(long minimalIntervalBetweenNextPress) {
+    /*public void setMinimalIntervalBetweenNextPress(long minimalIntervalBetweenNextPress) {
         this.minimalIntervalBetweenNextPress = minimalIntervalBetweenNextPress;
-    }
+    }*/
 
     /**
      * @return Время последнего нажатия данной клавиши
@@ -339,15 +338,11 @@ class KeyPressedAction {
      */
     INISettingsSection getSettingsSection() {
         INISettingsSection newSection = new INISettingsSection(keyCode);
-        try {
-            newSection.addField(new INISettingsRecord("actionId", "" + actionId));
-            newSection.addField(new INISettingsRecord("minPressInterval", "" + minimalIntervalBetweenNextPress));
-            newSection.addField(new INISettingsRecord("paramsCount", "" + params.size()));
-            for (int i = 0; i < params.size(); i++) {
-                newSection.addField(new INISettingsRecord("param_" + i, "" + params.get(i)));
-            }
-        } catch (AlreadyExistsException e) {
-            e.printStackTrace();
+        newSection.addField(new INISettingsRecord("actionId", "" + actionId));
+        newSection.addField(new INISettingsRecord("minPressInterval", "" + minimalIntervalBetweenNextPress));
+        newSection.addField(new INISettingsRecord("paramsCount", "" + params.size()));
+        for (int i = 0; i < params.size(); i++) {
+            newSection.addField(new INISettingsRecord("param_" + i, "" + params.get(i)));
         }
         return newSection;
     }
