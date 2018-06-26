@@ -2,6 +2,7 @@ import jssc.SerialPortList;
 import utils.ConsoleUtils;
 import utils.iniSettings.INISettings;
 import utils.iniSettings.INISettingsSection;
+import utils.iniSettings.exceptions.IniSettingsException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class Main implements ButtonPressedEventListener {
             for (INISettingsSection currentSection : settings.getSections()) {
                 keyPressedActions.add(new KeyPressedAction(currentSection));
             }
-        } catch (InvalidSettingsRecordException e) {
+        } catch (IniSettingsException e) {
             System.err.println("Ошибка интерпретации файла настроек");
         } catch (IOException ignored) {
             System.err.println("Ошибка чтения файла настроек");
