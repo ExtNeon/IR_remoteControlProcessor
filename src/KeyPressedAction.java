@@ -1,6 +1,7 @@
 import utils.ConsoleUtils;
 import utils.iniSettings.INISettingsRecord;
 import utils.iniSettings.INISettingsSection;
+import utils.iniSettings.exceptions.AlreadyExistsException;
 import utils.iniSettings.exceptions.IniSettingsException;
 
 import java.awt.*;
@@ -86,6 +87,7 @@ class KeyPressedAction {
 
     /**
      * Преобразует введённое пользователем название клавиши в её код, причём независимо от регистра.
+     *
      * @param enteredKeyName Название клавиши, код которой нужно узнать.
      * @return Код клавиши с заданным названием.
      */
@@ -209,6 +211,7 @@ class KeyPressedAction {
 
     /**
      * Выполняет действие, привязанное к данной клавише ранее.
+     *
      * @throws CancellationException В случае, если параметры действия некорректны.
      */
     void runAction() throws CancellationException {
@@ -334,15 +337,19 @@ class KeyPressedAction {
 
     /**
      * Возвращает объект типа INISettingsSection, представляющего собой секцию INI. Нужен для сохранения настроек в файл INI.
+     *
      * @return Секция INI - файла в виде экземпляра INISettingsSection.
      */
     INISettingsSection getSettingsSection() {
         INISettingsSection newSection = new INISettingsSection(keyCode);
-        newSection.addField(new INISettingsRecord("actionId", "" + actionId));
-        newSection.addField(new INISettingsRecord("minPressInterval", "" + minimalIntervalBetweenNextPress));
-        newSection.addField(new INISettingsRecord("paramsCount", "" + params.size()));
-        for (int i = 0; i < params.size(); i++) {
-            newSection.addField(new INISettingsRecord("param_" + i, "" + params.get(i)));
+        try {
+            newSection.addField(new INISettingsRecord("actionId", "" + actionId));
+            newSection.addField(new INISettingsRecord("minPressInterval", "" + minimalIntervalBetweenNextPress));
+            newSection.addField(new INISettingsRecord("paramsCount", "" + params.size()));
+            for (int i = 0; i < params.size(); i++) {
+                newSection.addField(new INISettingsRecord("param_" + i, "" + params.get(i)));
+            }
+        } catch (AlreadyExistsException ignored) {
         }
         return newSection;
     }

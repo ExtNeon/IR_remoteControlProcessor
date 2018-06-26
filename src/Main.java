@@ -61,7 +61,8 @@ public class Main implements ButtonPressedEventListener {
 
     /**
      * Удаляет действие с таким же кодом клавиши, что и у @code{action} из списка @code{actionsList}.
-     * @param action Действие, код клавиши которого будет использован для поиска
+     *
+     * @param action      Действие, код клавиши которого будет использован для поиска
      * @param actionsList Список действий, в котором будет произведён поиск.
      */
     private static void removePressedActionFromList(KeyPressedAction action, ArrayList<KeyPressedAction> actionsList) {
@@ -108,6 +109,7 @@ public class Main implements ButtonPressedEventListener {
      * Переводит обработчик модуля в режим ожидания нажатия на клавишу, а после нажатия и повторной проверки
      * возвращает код нажатой клавиши.
      * В случае, если пользователь ошибся, данные будут запрошены снова.
+     *
      * @param ir_module Модуль инфракрасного приёмника, с которого требуется считать код нажатой клавиши
      * @return Код нажатой клавиши в шестнадцатиричной форме
      * @throws InterruptedException В случае, если обработчик модуля был закрыт во время ожидания нажатия.
@@ -133,7 +135,8 @@ public class Main implements ButtonPressedEventListener {
         return buttonGettedCode;
     }
 
-    /**
+
+    /*
      * Метод переводит обработчик модуля в режим ожидания нажатия, а затем записывает коды @code{inputLength} нажатых клавиш.
      * Возвращает массив с кодами нажатых клавиш, размерность которого равна @code{inputLength}
      *
@@ -142,14 +145,14 @@ public class Main implements ButtonPressedEventListener {
      * @param delayBetween Задержка между началом приёма следующего нажатия
      * @return Массив, содержащий коды нажатых клавиш в шестнадцатиричном виде, размер которого равен @code{inputLength}
      */
-    private static String[] freeInput(IR_moduleConnection ir_module, int inputLength, int delayBetween) {
+   /* private static String[] freeInput(IR_moduleConnection ir_module, int inputLength, int delayBetween) {
         String[] pressedButtons = new String[inputLength];
         for (int i = 0; i < inputLength; i++) {
             pressedButtons[i] = getPressedKey(ir_module);
             ir_module.pauseReceivingFor(delayBetween);
         }
         return pressedButtons;
-    }
+    }*/
 
     /**
      * Переводит обработчик модуля в режим ожидания нажатия на клавишу, а после нажатия возвращает код нажатой клавиши.
@@ -195,8 +198,9 @@ public class Main implements ButtonPressedEventListener {
 
     /**
      * Выводит меню пользователя в консоль, и ждёт ввода определённой команды в практически бесконечном цикле.
+     *
      * @param ir_module Модуль инфракрасного приёмника, который будет использоваться для
-     * @param settings INI - файл, в который будут добавлены новые действия.
+     * @param settings  INI - файл, в который будут добавлены новые действия.
      * @throws InterruptedException В случае, если обработчик модуля был закрыт во время ожидания нажатия.
      */
     private void runMenu(IR_moduleConnection ir_module, INISettings settings) throws InterruptedException {
@@ -241,8 +245,9 @@ public class Main implements ButtonPressedEventListener {
 
     /**
      * Обработчик нажатия на кнопку ДУ.
+     *
      * @param buttonCode Шестнадцатиричный код клавиши, на которую нажал пользователь.
-     * @param ir_module Модуль инфракрасного приёмника, на который поступил сигнал.
+     * @param ir_module  Модуль инфракрасного приёмника, на который поступил сигнал.
      */
     @Override
     public void buttonPressed(String buttonCode, IR_moduleConnection ir_module) {

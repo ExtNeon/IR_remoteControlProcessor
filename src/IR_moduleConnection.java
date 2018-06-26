@@ -21,18 +21,18 @@ import java.util.ArrayList;
  */
 class IR_moduleConnection implements SerialPortEventListener, Closeable {
 
-    /*
-    ********Стандартные мелодии********
-     */
-    MonophonicComposition melody_connected;
+    private final SerialPort serialPort;
+    private final ArrayList<ButtonPressedEventListener> buttonPressedEventListeners;
     MonophonicComposition melody_standartSignal;
     MonophonicComposition melody_doubleSignal;
     MonophonicComposition melody_confirmationSignal;
+    /*
+    ********Стандартные мелодии********
+     */
+    private MonophonicComposition melody_connected;
     private boolean isConnected = false;
     private boolean waitForClickMode = false;
     private String clickResult = "";
-    private SerialPort serialPort;
-    private ArrayList<ButtonPressedEventListener> buttonPressedEventListeners;
     private volatile long disableReceivingEndTime = 0;
 
     /**
@@ -58,6 +58,7 @@ class IR_moduleConnection implements SerialPortEventListener, Closeable {
     /**
      * Конструктор. Просто открывает COM - порт на скорости 115200 бод, подключается и ждёт ответа от устройства.
      * Создаёт пустой список обработчиков событий.
+     *
      * @param portName Название COM - порта, через который будет осуществлено подключение
      */
     IR_moduleConnection(String portName) {
@@ -66,6 +67,7 @@ class IR_moduleConnection implements SerialPortEventListener, Closeable {
 
     /**
      * Метод конвертирует массив байтов в строку, представляя каждый байт, как символ.
+     *
      * @param buf входной массив байтов, который необходимо конвертировать
      * @return Строка, состоящая из символов, которые представляют каждый отдельный элемент.
      */
@@ -110,6 +112,7 @@ class IR_moduleConnection implements SerialPortEventListener, Closeable {
 
     /**
      * Временно приостанавливает обработку нажатий на @code{millis} миллисекунд
+     *
      * @param millis Время, на которое будет приостановлена обработка данных с модуля.
      */
     void pauseReceivingFor(long millis) {
@@ -117,15 +120,9 @@ class IR_moduleConnection implements SerialPortEventListener, Closeable {
     }
 
     /**
-     * Метод возобновляет обработку нажатий
-     */
-    public void resumeReceiving() {
-        disableReceivingEndTime = 0;
-    }
-
-    /**
      * Метод добавляет объект, реализующий интерфейс @code{ButtonPressedEventListener}, представляющий собой обработчик событий
      * связанных с нажатием на кнопки, в список.
+     *
      * @param listener объект, реализующий интерфейс @code{ButtonPressedEventListener}
      */
     void attachButtonEventListener(ButtonPressedEventListener listener) {
@@ -136,6 +133,7 @@ class IR_moduleConnection implements SerialPortEventListener, Closeable {
     /**
      * Метод удаляет объект, реализующий интерфейс @code{ButtonPressedEventListener}, представляющий собой обработчик событий
      * связанных с нажатием на кнопки, из списка.
+     *
      * @param listener объект, реализующий интерфейс @code{ButtonPressedEventListener}
      */
     private void detachButtonEventListener(ButtonPressedEventListener listener) {
@@ -188,7 +186,8 @@ class IR_moduleConnection implements SerialPortEventListener, Closeable {
     void playSignal(MonophonicComposition composition) {
         try {
             serialPort.writeString("PLAY:" + composition + "\n");
-        } catch (SerialPortException ignored) {}
+        } catch (SerialPortException ignored) {
+        }
     }
 
     /**
@@ -217,6 +216,7 @@ class IR_moduleConnection implements SerialPortEventListener, Closeable {
     public void close() {
         try {
             serialPort.closePort();
-        } catch (SerialPortException ignored) {}
+        } catch (SerialPortException ignored) {
+        }
     }
 }

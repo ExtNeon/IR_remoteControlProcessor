@@ -8,7 +8,6 @@ import java.util.ArrayList;
 class MonophonicComposition {
     private ArrayList<MonophonicNote> compositionSheet = new ArrayList<>();
     private int repeatationCount = 1;
-    private int maxPlayDuration = 0;
 
     MonophonicComposition() {
     }
@@ -45,6 +44,7 @@ class MonophonicComposition {
         StringBuilder result = new StringBuilder("(");
         result.append(repeatationCount);
         result.append(',');
+        int maxPlayDuration = 0;
         result.append(maxPlayDuration);
         result.append(")@");
         result.append(compositionSheet.size());

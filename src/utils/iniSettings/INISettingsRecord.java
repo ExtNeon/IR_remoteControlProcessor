@@ -5,6 +5,7 @@ import utils.iniSettings.exceptions.RecordParsingException;
 /**
  * Класс представляет запись формата key = value, использующуюся в формате INI
  * Суть - контейнер с двумя полями. Позволяет менять значения key и value.
+ *
  * @author Малякин Кирилл. 15ИТ20.
  */
 public class INISettingsRecord {
@@ -43,16 +44,8 @@ public class INISettingsRecord {
     /**
      * @return Значение ключа записи
      */
-    public String getKey() {
+    String getKey() {
         return key;
-    }
-
-    /**
-     * Устанавливает ключ согласно данной переменной
-     * @param key Новый ключ
-     */
-    public void setKey(String key) {
-        this.key = key;
     }
 
     /**
@@ -60,14 +53,6 @@ public class INISettingsRecord {
      */
     public String getValue() {
         return value;
-    }
-
-    /**
-     * Устанавливает содерджимое записи согласно новой переменной.
-     * @param value Новое содержимое записи
-     */
-    public void setValue(String value) {
-        this.value = value;
     }
 
     @Override

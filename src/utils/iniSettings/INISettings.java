@@ -1,6 +1,5 @@
 package utils.iniSettings;
 
-import utils.iniSettings.exceptions.AlreadyExistsException;
 import utils.iniSettings.exceptions.IniSettingsException;
 import utils.iniSettings.exceptions.NotFoundException;
 
@@ -12,34 +11,21 @@ import java.util.stream.Collectors;
  * Класс, позволяющий представить INI - файл, как объект.
  * Имеются следующие возможности:
  * <ul>
- *     <li>Добавление новых секций с записями
- *     <li>Обновление уже существующих секций</li>
- *     <li>Поиск секции по имени</li>
- *     <li>Импорт секций из файла, и их сохранение в файл</li>
+ * <li>Добавление новых секций с записями
+ * <li>Обновление уже существующих секций</li>
+ * <li>Поиск секции по имени</li>
+ * <li>Импорт секций из файла, и их сохранение в файл</li>
  * </ul>
+ *
  * @author Малякин Кирилл. 15ИТ20.
  */
 public class INISettings {
     private ArrayList<INISettingsSection> sections = new ArrayList<>();
 
     /**
-     * Метод добавляет секцию @code{newSection} в список секций.
-     *
-     * @param newSection Секция, которую необходимо добавить.
-     * @throws AlreadyExistsException Если в списке секций уже имеется секция с таким же именем.
-     */
-    public void addSection(INISettingsSection newSection) throws AlreadyExistsException {
-        for (INISettingsSection selectedSection : sections) {
-            if (selectedSection.getSectionName().equals(newSection.getSectionName())) {
-                throw new AlreadyExistsException();
-            }
-        }
-        sections.add(newSection);
-    }
-
-    /**
      * Метод обновляет секцию в списке, если её имя совпадает с именем секции @code{section}.
      * В противном случае, секция просто добавляется в список.
+     *
      * @param section Секция, которую необходимо обновить.
      */
     public void updateSection(INISettingsSection section) {
@@ -52,6 +38,7 @@ public class INISettings {
 
     /**
      * Возвращает секцию, найденную по её имени.
+     *
      * @param sectionName Имя секции, которую необходимо найти
      * @return Секция с заданным именем.
      * @throws NotFoundException В случае, если секции с подобным именем нет в списке.
@@ -74,6 +61,7 @@ public class INISettings {
 
     /**
      * Метод экспортирует список секций в файл @code{filename} в соответствие с форматом INI. Файл перезаписывается.
+     *
      * @param fileName Файл, в который необходимо экспортировать список секций.
      * @throws IOException В случае проблем с доступом к файлу и общих ошибок ввода - вывода.
      */
@@ -87,6 +75,7 @@ public class INISettings {
 
     /**
      * Метод импортирует список секций из файла @code{fileName}. Импортированный список замещает тот, что был до него.
+     *
      * @param fileName Файл, из которого требуется импортировать секции
      * @throws IOException В случае проблем с записью или ошибок ввода - вывода.
      */
@@ -99,6 +88,7 @@ public class INISettings {
 
     /**
      * Метод импортирует список секций из текста, оформленного согласно формату INI. Импортированный список замещает тот, что был до него.
+     *
      * @param text Текст, из которого требуется импортировать секции
      */
     private void importFromText(String text) throws IniSettingsException {
@@ -133,6 +123,7 @@ public class INISettings {
 
     /**
      * Разбивает строку на подстроки по признаку переноса строки, и помещает все подстроки в массив для более удобного доступа.
+     *
      * @param text Текст, который необходимо разбить на подстроки
      * @return Массив со строками, представляющими собой отдельные подстроки, разделённые по символу переноса строки.
      */
