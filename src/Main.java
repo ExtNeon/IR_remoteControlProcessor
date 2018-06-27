@@ -48,7 +48,7 @@ public class Main implements ButtonPressedEventListener {
     }
 
     /**
-     * Добавляет объект @code{KeyPressedAction} в список действий @code{actionsList},
+     * Добавляет объект <code>KeyPressedAction</code> в список действий <code>actionsList</code>,
      * причём так, чтобы действие на одну и ту же клавишу не повторялось.
      *
      * @param action      Действие, которое необходимо добавить в список
@@ -60,7 +60,7 @@ public class Main implements ButtonPressedEventListener {
     }
 
     /**
-     * Удаляет действие с таким же кодом клавиши, что и у @code{action} из списка @code{actionsList}.
+     * Удаляет действие с таким же кодом клавиши, что и у <code>action</code> из списка <code>actionsList</code>.
      *
      * @param action      Действие, код клавиши которого будет использован для поиска
      * @param actionsList Список действий, в котором будет произведён поиск.
@@ -76,9 +76,9 @@ public class Main implements ButtonPressedEventListener {
 
     /**
      * Метод сканирует все com - порты системы на предмет наличия в них модуля инфракрасного приёмника, а найдя
-     * автоматически подключается к нему и возвращает экземпляр класса @code{IR_moduleConnection}.
+     * автоматически подключается к нему и возвращает экземпляр класса <code>IR_moduleConnection</code>.
      *
-     * @return Экземпляр класса @code{IR_moduleConnection}, являющийся обработчиком данных именно с этого модуля.
+     * @return Экземпляр класса <code>IR_moduleConnection</code>, являющийся обработчиком данных именно с этого модуля.
      */
     private static IR_moduleConnection findAndConnectToTheModule() {
         IR_moduleConnection ir_moduleConnection = null;
@@ -137,13 +137,13 @@ public class Main implements ButtonPressedEventListener {
 
 
     /*
-     * Метод переводит обработчик модуля в режим ожидания нажатия, а затем записывает коды @code{inputLength} нажатых клавиш.
-     * Возвращает массив с кодами нажатых клавиш, размерность которого равна @code{inputLength}
+     * Метод переводит обработчик модуля в режим ожидания нажатия, а затем записывает коды <code>inputLength</code> нажатых клавиш.
+     * Возвращает массив с кодами нажатых клавиш, размерность которого равна <code>inputLength</code>
      *
      * @param ir_module    Модуль инфракрасного приёмника, с которого требуется считать код нажатых клавиш
      * @param inputLength  Количество нажатий, которое необходимо считать
      * @param delayBetween Задержка между началом приёма следующего нажатия
-     * @return Массив, содержащий коды нажатых клавиш в шестнадцатиричном виде, размер которого равен @code{inputLength}
+     * @return Массив, содержащий коды нажатых клавиш в шестнадцатиричном виде, размер которого равен <code>inputLength</code>
      */
    /* private static String[] freeInput(IR_moduleConnection ir_module, int inputLength, int delayBetween) {
         String[] pressedButtons = new String[inputLength];
@@ -184,7 +184,7 @@ public class Main implements ButtonPressedEventListener {
     }
 
     /**
-     * Метод приостанавливает поток на @code{millis} миллисекунд.
+     * Метод приостанавливает поток на <code>millis</code> миллисекунд.
      *
      * @param millis длительность паузы
      */

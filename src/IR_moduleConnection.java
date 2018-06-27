@@ -111,7 +111,7 @@ class IR_moduleConnection implements SerialPortEventListener, Closeable {
     }
 
     /**
-     * Временно приостанавливает обработку нажатий на @code{millis} миллисекунд
+     * Временно приостанавливает обработку нажатий на <code>millis</code> миллисекунд
      *
      * @param millis Время, на которое будет приостановлена обработка данных с модуля.
      */
@@ -120,10 +120,10 @@ class IR_moduleConnection implements SerialPortEventListener, Closeable {
     }
 
     /**
-     * Метод добавляет объект, реализующий интерфейс @code{ButtonPressedEventListener}, представляющий собой обработчик событий
+     * Метод добавляет объект, реализующий интерфейс <code>ButtonPressedEventListener</code>, представляющий собой обработчик событий
      * связанных с нажатием на кнопки, в список.
      *
-     * @param listener объект, реализующий интерфейс @code{ButtonPressedEventListener}
+     * @param listener объект, реализующий интерфейс <code>ButtonPressedEventListener</code>
      */
     void attachButtonEventListener(ButtonPressedEventListener listener) {
         detachButtonEventListener(listener); // Знаю, скорости не добавит. Но это избавит от клонирования записей
@@ -131,10 +131,10 @@ class IR_moduleConnection implements SerialPortEventListener, Closeable {
     }
 
     /**
-     * Метод удаляет объект, реализующий интерфейс @code{ButtonPressedEventListener}, представляющий собой обработчик событий
+     * Метод удаляет объект, реализующий интерфейс <code>ButtonPressedEventListener</code>, представляющий собой обработчик событий
      * связанных с нажатием на кнопки, из списка.
      *
-     * @param listener объект, реализующий интерфейс @code{ButtonPressedEventListener}
+     * @param listener объект, реализующий интерфейс <code>ButtonPressedEventListener</code>
      */
     private void detachButtonEventListener(ButtonPressedEventListener listener) {
         for (ButtonPressedEventListener selectedListener : buttonPressedEventListeners) {
@@ -182,6 +182,7 @@ class IR_moduleConnection implements SerialPortEventListener, Closeable {
 
     /**
      * Посылает на модуль мелодию для воспроизведения на PC SPEAKER. Используется для уведомительных целей.
+     * @param composition Мелодия, которую необходимо воспроизвести
      */
     void playSignal(MonophonicComposition composition) {
         try {

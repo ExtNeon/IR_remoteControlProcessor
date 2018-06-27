@@ -23,7 +23,7 @@ public class INISettings {
     private ArrayList<INISettingsSection> sections = new ArrayList<>();
 
     /**
-     * Метод обновляет секцию в списке, если её имя совпадает с именем секции @code{section}.
+     * Метод обновляет секцию в списке, если её имя совпадает с именем секции <code>section</code>.
      * В противном случае, секция просто добавляется в список.
      *
      * @param section Секция, которую необходимо обновить.
@@ -60,7 +60,7 @@ public class INISettings {
     }
 
     /**
-     * Метод экспортирует список секций в файл @code{filename} в соответствие с форматом INI. Файл перезаписывается.
+     * Метод экспортирует список секций в файл <code>filename</code> в соответствие с форматом INI. Файл перезаписывается.
      *
      * @param fileName Файл, в который необходимо экспортировать список секций.
      * @throws IOException В случае проблем с доступом к файлу и общих ошибок ввода - вывода.
@@ -74,10 +74,11 @@ public class INISettings {
     }
 
     /**
-     * Метод импортирует список секций из файла @code{fileName}. Импортированный список замещает тот, что был до него.
+     * Метод импортирует список секций из файла <code>fileName</code>. Импортированный список замещает тот, что был до него.
      *
      * @param fileName Файл, из которого требуется импортировать секции
      * @throws IOException В случае проблем с записью или ошибок ввода - вывода.
+     * @throws IniSettingsException В случае проблем с записями ini - файла
      */
     public void loadFromFile(String fileName) throws IOException, IniSettingsException {
         try (BufferedReader textFile = new BufferedReader(new FileReader(fileName))) {
