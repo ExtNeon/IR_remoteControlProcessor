@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * @author Малякин Кирилл. 15ИТ20
  */
 class MonophonicComposition {
-    private ArrayList<MonophonicNote> compositionSheet = new ArrayList<>();
+    private final ArrayList<MonophonicNote> compositionSheet = new ArrayList<>();
     private int repeatationCount = 1;
 
     MonophonicComposition() {

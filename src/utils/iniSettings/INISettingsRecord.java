@@ -28,14 +28,14 @@ public class INISettingsRecord {
      * @param string Строка в формате key=value
      * @throws RecordParsingException В случае, если формат строки отличается от ожидаемого.
      */
-    public INISettingsRecord(String string) throws RecordParsingException {
+    INISettingsRecord(String string) throws RecordParsingException {
         if (!string.contains("=")) {
             throw new RecordParsingException();
         }
         string = string.trim();
-        key = string.substring(0, string.indexOf('='));
+        key = string.substring(0, string.indexOf('=')).trim();
         try {
-            value = string.substring(string.indexOf('=') + 1, string.length());
+            value = string.substring(string.indexOf('=') + 1, string.length()).trim();
         } catch (IndexOutOfBoundsException e) {
             value = "";
         }

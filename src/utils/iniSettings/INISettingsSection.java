@@ -12,8 +12,8 @@ import java.util.ArrayList;
  * @author Малякин Кирилл. 15ИТ20.
  */
 public class INISettingsSection {
-    private String sectionName;
-    private ArrayList<INISettingsRecord> records = new ArrayList<>();
+    private final String sectionName;
+    private final ArrayList<INISettingsRecord> records = new ArrayList<>();
 
     /**
      * Конструктор. Необходимо лишь указать название данной секции.

@@ -21,11 +21,11 @@ public class Main implements ButtonPressedEventListener {
             "reconnect - закрыть текущее подключение, и заново запустить поиск устройств\n" +
             "toggle speaker - включить/выключить звуковой сигнал при нажатии кнопки\n" +
             "exit - выйти из приложения";
-    private ArrayList<KeyPressedAction> keyPressedActions = new ArrayList<>();
+    private final ArrayList<KeyPressedAction> keyPressedActions = new ArrayList<>();
     private boolean enableSignal = false;
     private String lastKeyPressed = "";
 
-    private Main() throws InterruptedException {
+    private Main() {
         INISettings settings = new INISettings();
         try {
             settings.loadFromFile(KEY_ACTIONS_SETTINGS_FILE);
@@ -112,9 +112,8 @@ public class Main implements ButtonPressedEventListener {
      *
      * @param ir_module Модуль инфракрасного приёмника, с которого требуется считать код нажатой клавиши
      * @return Код нажатой клавиши в шестнадцатиричной форме
-     * @throws InterruptedException В случае, если обработчик модуля был закрыт во время ожидания нажатия.
      */
-    private static String askForChoseKey(IR_moduleConnection ir_module) throws InterruptedException {
+    private static String askForChoseKey(IR_moduleConnection ir_module) {
         boolean isValid;
         String buttonGettedCode;
         do {
@@ -201,9 +200,8 @@ public class Main implements ButtonPressedEventListener {
      *
      * @param ir_module Модуль инфракрасного приёмника, который будет использоваться для
      * @param settings  INI - файл, в который будут добавлены новые действия.
-     * @throws InterruptedException В случае, если обработчик модуля был закрыт во время ожидания нажатия.
      */
-    private void runMenu(IR_moduleConnection ir_module, INISettings settings) throws InterruptedException {
+    private void runMenu(IR_moduleConnection ir_module, INISettings settings) {
         System.out.println("Доступные команды:\n" + HELP_STR);
         while (ir_module != null) {
             switch (ConsoleUtils.getEnteredString("\r_> ")) {
